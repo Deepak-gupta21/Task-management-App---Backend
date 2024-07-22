@@ -2,7 +2,7 @@ import React, { createContext, useReducer, useContext, useEffect } from 'react';
 import axios from 'axios';
 
 const TaskContext = createContext();
-
+const backendUrl = process.env.REACT_APP_BACKEND_URL;
 const initialState = {
   tasks: [],
   loading: false,
@@ -35,7 +35,7 @@ export const TaskProvider = ({ children }) => {
     const fetchTasks = async () => {
       dispatch({ type: 'FETCH_TASKS_REQUEST' });
       try {
-        const response = await axios.get('http://localhost:3001/tasks');
+        const response = await axios.get(`${backendUrl}/tasks`);
         dispatch({ type: 'FETCH_TASKS_SUCCESS', payload: response.data });
       } catch (error) {
         dispatch({ type: 'FETCH_TASKS_FAILURE', payload: error.message });
@@ -45,17 +45,17 @@ export const TaskProvider = ({ children }) => {
   }, []);
 
   const createTask = async (task) => {
-    const response = await axios.post('http://localhost:3001/tasks', task);
+    const response = await axios.post(`${backendUrl}/tasks`, task);
     dispatch({ type: 'CREATE_TASK', payload: response.data });
   };
 
   const updateTask = async (task) => {
-    const response = await axios.put(`http://localhost:3001/tasks/${task.id}`, task);
+    const response = await axios.put(`${backendUrl}/tasks/${task.id}`, task);
     dispatch({ type: 'UPDATE_TASK', payload: response.data });
   };
 
   const deleteTask = async (taskId) => {
-    await axios.delete(`http://localhost:3001/tasks/${taskId}`);
+    await axios.delete(`${backendUrl}/tasks/${taskId}`);
     dispatch({ type: 'DELETE_TASK', payload: taskId });
   };
 
